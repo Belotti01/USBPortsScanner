@@ -10,7 +10,7 @@ namespace PortsScanner {
 
             foreach(string usbDeviceAddress in usbDeviceAddresses) {
                 // Query MI for the PNP device info
-                ManagementObjectCollection curMoc = QueryMi("Select * from Win32_PnPEntity where PNPDeviceID = " + usbDeviceAddress);
+                ManagementObjectCollection curMoc = QueryMi($"Select * from Win32_PnPEntity where PNPDeviceID = {usbDeviceAddress}");
                 foreach(ManagementBaseObject device in curMoc) {
                     usbDevices.Add(device);
                 }
@@ -22,7 +22,7 @@ namespace PortsScanner {
         private static IList<string> LookUpUsbDeviceAddresses() {
             // Request data from the Windows Management Infrastructure;
             // this query gets the addressing information for connected USB devices
-            ManagementObjectCollection usbDeviceAddressInfo = QueryMi(@"Select * from Win32_USBControllerDevice");
+            ManagementObjectCollection usbDeviceAddressInfo = QueryMi("Select * from Win32_USBControllerDevice");
             List<string> usbDeviceAddresses = new();
 
             foreach(var device in usbDeviceAddressInfo) {
@@ -32,7 +32,9 @@ namespace PortsScanner {
                     curPnpAddress = curPnpAddress.Split(new string[] { "DeviceID=" }, 2, StringSplitOptions.None)[1];
 
                     usbDeviceAddresses.Add(curPnpAddress);
-                }catch { }
+                }catch { 
+                    // Not a USBControllerDevice; ignore
+                }
             }
 
             return usbDeviceAddresses;
