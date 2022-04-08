@@ -1,4 +1,5 @@
-﻿using System.Management;
+﻿using System.Diagnostics.CodeAnalysis;
+using System.Management;
 
 namespace PortsScanner {
     public partial class MainForm : Form {
@@ -6,6 +7,12 @@ namespace PortsScanner {
 
         public MainForm() {
             InitializeComponent();
+            Scan();
+        }
+
+        [MemberNotNull(nameof(devices))]
+        protected void Scan() {
+            btn_refresh.Enabled = false;
             SuspendLayout();
             devices = UsbBrowser.GetUsbDevices();
 
@@ -17,6 +24,12 @@ namespace PortsScanner {
             }
 
             ResumeLayout();
+            btn_refresh.Enabled = true;
         }
-    }
+
+		private void RefreshButtonClick(object sender, EventArgs e) {
+            pnlContainer.Controls.Clear();
+            Scan();
+		}
+	}
 }
