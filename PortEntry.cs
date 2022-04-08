@@ -29,6 +29,8 @@ namespace PortsScanner {
                     }
                 }
             }
+
+            container.SplitterDistance = lblTitle.Height;
         }
 
         private void AddLine(object name, object value) {
@@ -36,5 +38,5 @@ namespace PortsScanner {
             string line = $"{name}:\t\t {value}";
             lstData.Items.Add(line);
         }
-    }
+	}
 }
